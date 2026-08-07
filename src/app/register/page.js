@@ -104,17 +104,17 @@ export default function Register() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>ชื่อ</label>
-              <input type="text" name="txt_firstname" value={form.txt_firstname} onChange={handleChange} className={inputClass} placeholder='สมชาย' required />
+              <input type="text" name="txt_firstname" value={form.txt_firstname} onChange={handleChange} className={inputClass} placeholder='Firstname' required />
             </div>
             <div>
               <label className={labelClass}>นามสกุล</label>
-              <input type="text" name="txt_lastname" value={form.txt_lastname} onChange={handleChange} className={inputClass} placeholder='ใจดี' required />
+              <input type="text" name="txt_lastname" value={form.txt_lastname} onChange={handleChange} className={inputClass} placeholder='Lastname' required />
             </div>
           </div>
 
           <div>
             <label className={labelClass}>Username</label>
-            <input type="text" name="txt_username" value={form.txt_username} onChange={handleChange} className={inputClass} placeholder='somchai_jd' required />
+            <input type="text" name="txt_username" value={form.txt_username} onChange={handleChange} className={inputClass} placeholder='Username' required />
           </div>
 
           <div>
