@@ -2,19 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react"; // 2. นำเข้า useState และ useEffect
+import { useState, useEffect } from "react"; // นำเข้า useState และ useEffect
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [token, setToken] = useState(null); // 3. กำหนด state สำหรับเก็บ token
+  const [token, setToken] = useState(null); // กำหนด state สำหรับเก็บ token
 
-  // 4. ใช้ useEffect ดึง token จาก localStorage เมื่อโหลดคอมโพเนนต์
+  // ใช้ useEffect ดึง token จาก localStorage และอัปเดตทันทีทุกครั้งที่เปลี่ยนหน้า (pathname เปลี่ยน)
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
-  }, []);
+  }, [pathname]);
 
-  // 5. สร้างฟังก์ชัน handleLogout สำหรับล้างข้อมูลและพาออกระบบ
+  // สร้างฟังก์ชัน handleLogout สำหรับล้างข้อมูลและพาออกระบบ
   const handleLogout = () => {
     localStorage.removeItem("token"); // ลบ token
     setToken(null); // อัปเดต state
@@ -66,7 +66,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* 6. แก้ไขเมนูส่วนปุ่มขวา: สลับการแสดงผลระหว่างปุ่ม Logout กับ สมัครสมาชิก/Login */}
+            {/* ส่วนปุ่มขวา: สลับการแสดงผลระหว่างปุ่ม Logout กับ สมัครสมาชิก/Login */}
             <div className="flex items-center gap-4">
               {token ? (
                 <button
