@@ -1,23 +1,35 @@
-"use client"; // จำเป็นสำหรับการใช้ usePathname() เพื่อเช็ก Active Link
+"use client"; // จำเป็นสำหรับการใช้ usePathname() และ Hooks
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react"; // 2. นำเข้า useState และ useEffect
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [token, setToken] = useState(null); // 3. กำหนด state สำหรับเก็บ token
+
+  // 4. ใช้ useEffect ดึง token จาก localStorage เมื่อโหลดคอมโพเนนต์
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
+
+  // 5. สร้างฟังก์ชัน handleLogout สำหรับล้างข้อมูลและพาออกระบบ
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // ลบ token
+    setToken(null); // อัปเดต state
+    window.location.href = "/"; // พาผู้ใช้กลับหน้าแรก
+  };
 
   // สไตล์สำหรับเมนูทั่วไปที่มีเอฟเฟกต์เส้นใต้วิ่ง
   const navLinkClass = (href) => {
     const isActive = pathname === href;
-    // relative เพื่อให้เส้นใต้อ้างอิงตำแหน่งได้, py-2 เพื่อเพิ่มพื้นที่กด
-    // before: ใช้สำหรับสร้างเส้นใต้จอมปลอมที่วิ่งได้
     return `relative py-2 font-medium transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-full before:origin-right before:scale-x-0 before:bg-yellow-400 before:transition-transform before:duration-300 hover:before:origin-left hover:before:scale-x-100 ${
       isActive ? "text-yellow-400 before:scale-x-100 font-semibold" : "text-blue-100 hover:text-white"
     }`;
   };
 
   return (
-    // sticky top-0 เพื่อให้เกาะขอบบน, z-50 เพื่อให้อยู่เหนือเนื้อหาอื่น, backdrop-blur เพื่อเอฟเฟกต์กระจกฝ้า
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white shadow-xl backdrop-blur-md bg-opacity-95">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
@@ -45,16 +57,42 @@ export default function Navbar() {
               <Link href="/contact" className={navLinkClass("/contact")}>
                 ติดต่อ
               </Link>
+
+              {/* เพิ่มลิงก์ไปหน้าจัดการสมาชิก (แสดงเฉพาะตอนเข้าสู่ระบบแล้ว) */}
+              {token && (
+                <Link href="/users" className={navLinkClass("/users")}>
+                  จัดการสมาชิก
+                </Link>
+              )}
             </div>
 
-            {/* แยกปุ่มสมัครสมาชิกออกมาให้เด่นเป็นปุ่มกดสไตล์ Modern */}
-            <Link 
-              href="/register" 
-              // shadow-md และ hover:shadow-lg เพื่อเพิ่มมิติ, hover:-translate-y-0.5 เพื่อลูกเล่นลอยขึ้น
-              className="px-5 py-2 rounded-full bg-white text-blue-600 font-semibold shadow-md transition-all duration-300 hover:bg-yellow-300 hover:text-blue-900 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
-            >
-              สมัครสมาชิก
-            </Link>
+            {/* 6. แก้ไขเมนูส่วนปุ่มขวา: สลับการแสดงผลระหว่างปุ่ม Logout กับ สมัครสมาชิก/Login */}
+            <div className="flex items-center gap-4">
+              {token ? (
+                <button
+                  onClick={handleLogout}
+                  className="px-5 py-2 rounded-full bg-red-500 text-white font-semibold shadow-md transition-all duration-300 hover:bg-red-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/register"
+                    className="px-5 py-2 rounded-full bg-white text-blue-600 font-semibold shadow-md transition-all duration-300 hover:bg-yellow-300 hover:text-blue-900 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                  >
+                    สมัครสมาชิก
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="px-5 py-2 rounded-full bg-blue-700 text-white font-semibold shadow-md transition-all duration-300 hover:bg-blue-800 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                  >
+                    Login
+                  </Link>
+                </>
+              )}
+            </div>
+
           </div>
 
         </div>
