@@ -1,10 +1,13 @@
 "use client";
 
+// เพิ่มคำสั่งนี้เพื่อให้ Next.js รู้ว่าเป็น Dynamic Page ไม่พยายาม Prerender ตอน Build
+export const dynamic = 'force-dynamic';
+
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -194,5 +197,13 @@ export default function CheckoutPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">กำลังโหลดข้อมูล...</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
